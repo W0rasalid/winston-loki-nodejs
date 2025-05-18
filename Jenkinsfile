@@ -1,24 +1,17 @@
 pipeline {
-  agent {
-    docker {
-      image 'docker:24.0.2-cli' // หรือ docker:latest
-      args '-v /var/run/docker.sock:/var/run/docker.sock'
-    }
-  }
+    agent any
 
     environment {
-        IMAGE_NAME = 'worasalid/winston-loki-nodejs'
-        CONTAINER_NAME = 'winston-loki-container'
-        PORT = '3000'
+        IMAGE_NAME = "worasalid/winston-loki-nodejs"
+        CONTAINER_NAME = "winston-loki-nodejs-container"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'github-creds', url: 'https://github.com/W0rasalid/winston-loki-nodejs.git', branch: 'main'
+                checkout scm
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 script {
@@ -27,40 +20,31 @@ pipeline {
                 }
             }
         }
-
         stage('Stop and Remove Old Container') {
             steps {
                 script {
-                    echo "🧹 Cleaning up old container..."
+                    echo "🛑 Stopping old container if exists..."
                     sh """
-                        docker stop ${CONTAINER_NAME} || true
-                        docker rm ${CONTAINER_NAME} || true
+                    if [ \$(docker ps -q -f name=${CONTAINER_NAME}) ]; then
+                        docker stop ${CONTAINER_NAME}
+                        docker rm ${CONTAINER_NAME}
+                    fi
                     """
                 }
             }
         }
-
         stage('Run Docker Container') {
             steps {
                 script {
-                    echo "🚀 Running new container..."
-                    sh """
-                        docker run -d \
-                        --name ${CONTAINER_NAME} \
-                        -p ${PORT}:${PORT} \
-                        ${IMAGE_NAME}:latest
-                    """
+                    echo "▶️ Running new container..."
+                    sh "docker run -d --name ${CONTAINER_NAME} -p 3000:3000 ${IMAGE_NAME}:latest"
                 }
             }
         }
-
-        stage('Display ngrok URL') {
-            steps {
-                script {
-                    echo "🌐 If you're running ngrok on port ${PORT}, here's the public URL:"
-                    sh "curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url'"
-                }
-            }
+    }
+    post {
+        always {
+            echo "Pipeline finished."
         }
     }
 }
