@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
-        // IMAGE_NAME = "worasalid/winston-loki-nodejs"
-        // CONTAINER_NAME = "winston-loki-nodejs-container"
-       COMPOSE_FILE = "docker-compose.yml"
+         IMAGE_NAME = "worasalid/winston-loki-nodejs"
+         CONTAINER_NAME = "winston-loki-nodejs-container"
     }
 
     stages {
@@ -38,7 +37,7 @@ pipeline {
             steps {
                 script {
                     echo "▶️ Running new container..."
-                    sh "docker run -d --name ${CONTAINER_NAME} -p 3000:3000 ${IMAGE_NAME}:latest"
+                    sh "docker run -d --name ${CONTAINER_NAME} -p 4000:3000 ${IMAGE_NAME}:latest"
                 }
             }
         }

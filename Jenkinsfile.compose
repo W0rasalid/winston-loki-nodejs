@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    environment {
+        COMPOSE_FILE = "docker-compose.yml"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build and Run with Docker Compose') {
+            steps {
+                script {
+                    echo "🔨 Building and starting with Docker Compose..."
+                    sh "docker-compose -f ${COMPOSE_FILE} up --build -d"
+                }
+            }
+        }
+
+        stage('Show Running Containers') {
+            steps {
+                sh "docker ps"
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline (Compose) finished."
+        }
+    }
+}
