@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "worasalid/winston-loki-nodejs"
-        CONTAINER_NAME = "winston-loki-nodejs-container"
+        // IMAGE_NAME = "worasalid/winston-loki-nodejs"
+        // CONTAINER_NAME = "winston-loki-nodejs-container"
+       COMPOSE_FILE = "docker-compose.yml"
     }
 
     stages {

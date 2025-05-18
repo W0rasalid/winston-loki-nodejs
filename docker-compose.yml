@@ -17,6 +17,19 @@ services:
     networks:
       - winston-loki
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: worasalid/winston-loki-nodejs:latest
+    container_name: winston-loki-nodejs-container
+    ports:
+      - "4000:4000"
+    networks:
+      - winston-loki
+    depends_on:
+      - loki
+
 networks:
   winston-loki:
     driver: bridge
