@@ -30,9 +30,11 @@ pipeline {
                         docker rm ${CONTAINER_NAME}
                     fi
                     """
+                    
                 }
             }
         }
+
         stage('Run Docker Container') {
             steps {
                 script {
@@ -42,6 +44,7 @@ pipeline {
             }
         }
     }
+
     post {
         always {
             echo "Pipeline finished."
