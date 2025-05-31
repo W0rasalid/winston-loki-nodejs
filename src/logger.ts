@@ -5,7 +5,8 @@ const options: LoggerOptions = {
   transports: [
     //#section 1 (send logs to loki)
     new LokiTransport({
-      host: "http://localhost:3100",
+      // host: "http://localhost:3100",
+      host: "http://host.docker.internal:3100",
       labels: {
         service: "winston-service",
         env: "dev",
