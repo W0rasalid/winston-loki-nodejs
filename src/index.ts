@@ -14,7 +14,7 @@ app.get("/info", (req: Request, res: Response) => {
   const respSuccess = {
     statusCode: 200,
     statusText: "success",
-    message: "Info Message",
+    message: "Info Message Success",
   };
 
   logger.info({
